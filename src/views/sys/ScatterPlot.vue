@@ -39,16 +39,17 @@
         </template>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getObjective">搜索</el-button>
+        <el-button @click="getObjective">查询</el-button>
 
       </el-form-item>
     </el-form>
     <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
     <div style="height: 50px"></div>
     <div id="first" style="width: 600px;height:400px; float: left"></div>
-    <div id="second" style="width: 600px;height:400px;float: right;"></div>
+    <div id="second" style="width: 600px;height:400px;float: right"></div>
     <div style="height: 500px"></div>
-    <div id="third" style="width: 600px;height:400px; margin: 0 auto"></div>
+    <div id="third" style="width: 600px;height:400px; float: left"></div>
+    <div id="bar" style="width: 600px;height:400px; float: right"></div>
   </div>
 </template>
 
@@ -63,6 +64,7 @@ export default {
       seriesDataOne: [],
       seriesDataTwo: [],
       seriesDataThree: [],
+      seriesBarData: [],
       xAxisData: [],
       searchForm: {
         name: '',
@@ -78,7 +80,8 @@ export default {
         value: 'id',
         children: 'classes',
         emitPath: false
-      }
+      },
+      yAxis: 0
 
     }
   },
@@ -87,6 +90,7 @@ export default {
     this.DrawScatterFirst()
     this.DrawScatterSecond()
     this.DrawScatterThird()
+    this.DrawBar()
 
   },
 
@@ -106,8 +110,8 @@ export default {
           name: "学生序号",
           nameLocation: 'center',
           nameGap: 25,
-          axisLine:{
-            lineStyle:{
+          axisLine: {
+            lineStyle: {
               /*color: '#f7a7a6'*/
             }
           }
@@ -117,9 +121,9 @@ export default {
           name: "课程目标1达成度",
           nameLocation: 'center',
           nameGap: 25,
-          axisLine:{
+          axisLine: {
             show: true,
-            lineStyle:{
+            lineStyle: {
               /*color: '#f7a7a6'*/
             }
           }
@@ -127,7 +131,21 @@ export default {
         series: [
           {
             type: 'scatter',
-            data: this.seriesDataOne
+            data: this.seriesDataOne,
+            markLine: {
+              symbol: ['none', 'none'], //去掉箭头
+              lineStyle: {
+                type: 'solid',
+                color: '#f50534', // 这儿设置安全基线颜色
+              },
+              data: [
+                {
+                  name: "目标期望达成度线",
+                  yAxis: this.yAxis,
+                },
+              ]
+            },
+
           }
         ],
         tooltip: {//提示框组件
@@ -160,19 +178,44 @@ export default {
           name: "课程目标2达成度",
           nameLocation: 'center',
           nameGap: 25,
-          axisLine:{
+          axisLine: {
             show: true,
-            lineStyle:{
-            /*  color: '#f7a7a6'*/
+            lineStyle: {
+              /*  color: '#f7a7a6'*/
             }
           }
         },
         series: [
           {
             type: 'scatter',
-            data: this.seriesDataTwo
+            data: this.seriesDataTwo,
+            markLine: {
+              symbol: ['none', 'none'], //去掉箭头
+              lineStyle: {
+                type: 'solid',
+                color: '#f50534', // 这儿设置安全基线颜色
+              },
+              data: [
+                {
+                  name: "目标期望达成度线",
+                  yAxis: this.yAxis,
+                },
+                {
+                  name: "达成度平均值",
+                  type: "average"
+                }
+              ]
+            },
           }
-        ]
+        ],
+        tooltip: {
+          trigger: 'item',
+          axisPointer: {
+
+            type: 'line'
+          },
+          formatter: '({b} : {c}) <br/>'
+        },
       });
     },
     DrawScatterThird() {
@@ -195,9 +238,9 @@ export default {
           name: "课程目标3达成度",
           nameLocation: 'center',
           nameGap: 25,
-          axisLine:{
+          axisLine: {
             show: true,
-            lineStyle:{
+            lineStyle: {
               /*color: '#a6b3f7'*/
             }
           }
@@ -205,26 +248,105 @@ export default {
         series: [
           {
             type: 'scatter',
-            data: this.seriesDataThree
+            data: this.seriesDataThree,
+            markLine: {
+              symbol: ['none', 'none'], //去掉箭头
+              lineStyle: {
+                type: 'solid',
+                color: '#f50534', // 这儿设置安全基线颜色
+              },
+              data: [
+                {
+                  name: "目标期望达成度线",
+                  yAxis: this.yAxis,
+                },
+              ]
+            },
           }
-        ]
+        ],
+        tooltip: {
+          trigger: 'item',
+          axisPointer: {
+
+            type: 'line'
+          },
+          formatter: '({b} : {c}) <br/>'
+        },
       });
     },
+    DrawBar() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = echarts.init(document.getElementById('bar'));
+      // 绘制图表
+      myChart.setOption({
+        title: {
+          text: '课程目标整体达成情况柱状图',
+          left: 'center'
+
+        },
+        xAxis: {
+          data: ["目标一", "目标二", "目标三"],
+          name: "课程目标",
+          nameLocation: 'center',
+          nameGap: 25
+        },
+        yAxis: {
+          name: "达成度",
+          nameLocation: 'center',
+          nameGap: 25,
+          axisLine: {
+            show: true
+          }
+        },
+        series: [
+          {
+            type: 'bar',
+            data: this.seriesBarData,
+            barWidth: '20%',
+            markLine: {
+              symbol: ['none', 'none'], //去掉箭头
+              lineStyle: {
+                type: 'dashed',
+                color: '#f50534', // 这儿设置安全基线颜色
+
+              },
+              label: "目标期望达成度线",
+              data: [
+                {
+                  name: "目标期望达成度线",
+                  yAxis: this.yAxis,
+                },
+              ]
+            },
+          }
+        ],
+        tooltip: {
+          trigger: 'item',
+          axisPointer: {
+
+            type: 'shadow'
+          },
+          formatter: '({b} : {c}) <br/>'
+        },
+      });
+
+    },
     getObjective() {
-      this.seriesDataOne =[]
-      this.seriesDataTwo =[]
-      this.seriesDataThree =[]
+      this.seriesDataOne = []
+      this.seriesDataTwo = []
+      this.seriesDataThree = []
+      this.seriesBarData = []
       this.xAxisData = []
       this.DrawScatterFirst()
       this.DrawScatterSecond()
       this.DrawScatterThird()
 
-      this.$axios.post('/studentCourse/getObjective',this.searchForm).then(res => {
+      this.$axios.post('/studentCourse/getObjective', this.searchForm).then(res => {
 
         console.log(res.data.data)
         let grades = res.data.data
 
-        if(grades.length !=0){
+        if (grades.length != 0) {
           for (let i = 1; i < grades.length; i++) {
             this.xAxisData.push(i)
           }
@@ -235,50 +357,22 @@ export default {
             this.seriesDataTwo.push((grades[i].objectiveTwoGrade.toFixed(3)))
             this.seriesDataThree.push((grades[i].objectiveThreeGrade).toFixed(3))
           }
-
-
+          this.yAxis = 0.6
           this.DrawScatterFirst()
           this.DrawScatterSecond()
           this.DrawScatterThird()
         }
 
       })
-    },
-    search() {
-      this.seriesDataOne =[]
-      this.seriesDataTwo =[]
-      this.seriesDataThree =[]
-      this.xAxisData = []
-      this.DrawScatterFirst()
-      this.DrawScatterSecond()
-      this.DrawScatterThird()
 
-      this.$axios.post('/studentCourse/getByRequire', this.searchForm).then(res => {
+      this.$axios.post('/studentCourse/getGradeAvg', this.searchForm).then(res => {
 
-        console.log(res.data.data)
-        let grades = res.data.data
-
-        if(grades.length !=0){
-          for (let i = 1; i <= grades.length; i++) {
-            this.xAxisData.push(i)
-          }
-          console.log('id==>' + grades[0].objectiveGrade)
-
-          for (let i = 0; i < grades.length; i++) {
-            this.seriesDataOne.push(grades[i].objectiveOneGrade)
-            this.seriesDataTwo.push(grades[i].objectiveTwoGrade)
-            this.seriesDataThree.push(grades[i].objectiveThreeGrade)
-          }
-
-
-          this.DrawScatterFirst()
-          this.DrawScatterSecond()
-          this.DrawScatterThird()
-        }
-
-
-
-
+        let result = res.data.data
+        this.seriesBarData.push((result.objectiveOneGradeAvg).toFixed(2))
+        this.seriesBarData.push((result.objectiveTwoGradeAvg).toFixed(2))
+        this.seriesBarData.push((result.objectiveThreeGradeAvg).toFixed(2))
+        this.yAxis = 0.6
+        this.DrawBar()
       })
     },
     getCourseSelect() {

@@ -26,13 +26,15 @@ request.interceptors.response.use(
         if (response.data.msg === '登录失败:Bad credentials'){
             response.data.msg = '登录失败:密码错误'
         }
-
-        if (res.statusCode === 200) {
-            return response
-        } else {
-            Element.Message.error(res.msg ? res.msg : '系统异常' )
-            return Promise.reject(response.data.msg)
+        if (res.statusCode!=null){
+            if (res.statusCode === 200) {
+                return response
+            } else {
+                Element.Message.error(res.msg ? res.msg : '系统异常' )
+                return Promise.reject(response.data.msg)
+            }
         }
+        return response
     },
     error => {
 

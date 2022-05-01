@@ -17,9 +17,9 @@ Vue.prototype.$axios = axios
 
 Vue.use(Element)
 
-require("./mock.js") //引入mock数据，关闭则注释该行
+//require("./mock.js") //引入mock数据，关闭则注释该行
 
-Vue.config.productionTip = false
+/*Vue.config.productionTip = false*/
 
 new Vue({
   router,

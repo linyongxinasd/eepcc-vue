@@ -11,6 +11,7 @@ import Course from "@/views/sys/Course";
 import CourseGrade from "../views/sys/CourseGrade"
 import Grade from "@/views/sys/Grade";
 import ScatterPlot from "@/views/sys/ScatterPlot";
+import Upload from "@/views/sys/Upload";
 import UserCenter from "../views/UserCenter";
 
 
@@ -65,6 +66,11 @@ const routes = [
                 path: '/sys/scatterPlot',
                 name: 'sysScatterPlot',
                 component: ScatterPlot
+            },
+            {
+                path: '/sys/upload',
+                name: 'sysUpload',
+                component: Upload
             },
 
             {

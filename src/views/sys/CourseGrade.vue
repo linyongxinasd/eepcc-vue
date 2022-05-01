@@ -43,7 +43,8 @@
 
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addCourse()">新增课程</el-button>
+        <Upload></Upload>
+<!--        <el-button type="primary" @click="addCourse()">新增课程</el-button>-->
       </el-form-item>
       <el-form-item>
         <el-popconfirm
@@ -194,8 +195,12 @@
 </template>
 
 <script>
+import Upload from "@/views/sys/Upload";
 export default {
   name: "CourseGrade",
+  components:{
+    Upload
+  },
   data() {
     return {
       tableData: [],
@@ -281,7 +286,7 @@ export default {
       })
     },
 
-    addCourse(){
+    /*addCourse(){
 
       this.$axios.get('/type/getType').then( res =>{
 
@@ -335,7 +340,7 @@ export default {
         this.dialogVisible =true
       })
 
-    },
+    },*/
     getCourseSelect(){
 
       this.$axios.get('/course/getCourseSelect').then( res =>{
