@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <el-button type="primary" @click="openDialog()">导入课程成绩excel</el-button>
     <el-dialog
         title="上传文件页面"
@@ -8,6 +9,16 @@
         :before-close="handleClose"
 
     >
+      <el-cascader
+          v-model="courseId"
+          placeholder="请选择对应课程"
+          :props="defaultParams"
+          :options="courseOptions"
+          style="width: 450px"
+
+      >
+      </el-cascader>
+      <div style="height: 10px"></div>
       <el-upload
           ref="upload"
           class="upload-demo"
@@ -20,15 +31,17 @@
           :on-exceed="handleExceed"
           :file-list="fileList"
           :auto-upload="false"
-          >
+          :data={courseId:this.courseId}
+      >
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传文件</el-button>
         <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件，且不超过100M</div>
       </el-upload>
       <div style="height: 80px"></div>
-      <div style= "float: right">如果没有模板请先下载模板文件
-      <el-button id="a" type="text" @click="download">下载<i class="el-icon-upload el-icon--right"></i></el-button>
+      <div style="float: right">如果没有模板请先下载模板文件
+        <el-button id="a" type="text" @click="download">下载<i class="el-icon-upload el-icon--right"></i></el-button>
       </div>
+      <div style="height: 5px"></div>
     </el-dialog>
 
 
@@ -41,18 +54,26 @@ export default {
   data() {
     return {
       fileList: [],
-    /*{
-      name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-    }, {
-      name: 'food2.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-    }*/
-      uploadDialogVisible: false
+      /*{
+        name: 'food.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+      }, {
+        name: 'food2.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+      }*/
+      uploadDialogVisible: false,
+      courseId: '',
+      courseOptions: [],
+      defaultParams: {
+        label: 'name',
+        value: 'id',
+        children: 'children',
+        emitPath: false
+      }
     };
   },
   methods: {
-    openDialog(){
+    openDialog() {
       this.uploadDialogVisible = true
     },
     handleClose(done) {
@@ -60,7 +81,8 @@ export default {
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => {
+          });
     },
     upload() {
       this.$refs.upload.submit()
@@ -115,7 +137,15 @@ export default {
           }).catch(function (error) {
         console.log(error);
       })
+    },
+    getCourseOption() {
+      this.$axios.get('course/getCourseCascade').then(res => {
+        this.courseOptions = res.data.data
+      })
     }
+  },
+  created() {
+    this.getCourseOption()
   }
 }
 </script>

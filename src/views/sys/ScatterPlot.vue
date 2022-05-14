@@ -40,6 +40,7 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getObjective">查询</el-button>
+        <el-button @click="getReport">查看课程质量报告</el-button>
 
       </el-form-item>
     </el-form>
@@ -47,9 +48,15 @@
     <div style="height: 50px"></div>
     <div id="first" style="width: 600px;height:400px; float: left"></div>
     <div id="second" style="width: 600px;height:400px;float: right"></div>
-    <div style="height: 500px"></div>
+
+    <div v-html="report.objectOneReport" id="firstReport" style="width: 500px;height:100%; float: left; padding-left: 50px ;padding-bottom: 20px;text-align: left;font-size: 13px;line-height:1.7 ">报告</div>
+    <div v-html="report.objectTwoReport" id="secondReport" style="width: 500px;height:100%; float: right; padding-right: 50px; padding-bottom: 20px;text-align: left;font-size: 13px;line-height:1.7 ">报告</div>
+
     <div id="third" style="width: 600px;height:400px; float: left"></div>
     <div id="bar" style="width: 600px;height:400px; float: right"></div>
+    <div v-html="report.objectThreeReport" id="thirdReport" style="width: 500px;height:100%; float: left; padding-left: 50px ;padding-bottom: 20px;text-align: left;font-size: 13px;line-height:1.7 ">报告</div>
+    <div v-html="report.totalReport" id="totalReport" style="width: 500px;height:100%; float: right; padding-right: 50px; padding-bottom: 20px;text-align: left;font-size: 13px;line-height:1.7 ">报告</div>
+
   </div>
 </template>
 
@@ -61,6 +68,9 @@ export default {
   name: "ScatterPlot",
   data() {
     return {
+      report: {
+
+      },
       seriesDataOne: [],
       seriesDataTwo: [],
       seriesDataThree: [],
@@ -95,6 +105,7 @@ export default {
   },
 
   methods: {
+
     DrawScatterFirst() {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById('first'));
@@ -134,15 +145,27 @@ export default {
             data: this.seriesDataOne,
             markLine: {
               symbol: ['none', 'none'], //去掉箭头
-              lineStyle: {
+              /*lineStyle: {
                 type: 'solid',
                 color: '#f50534', // 这儿设置安全基线颜色
-              },
+              },*/
               data: [
                 {
                   name: "目标期望达成度线",
                   yAxis: this.yAxis,
+                  lineStyle: {
+                    type: "dashed",
+                    color: '#f50534', // 这儿设置安全基线颜色
+                  }
                 },
+                {
+                  name: "达成度平均值",
+                  type: "average",
+                  lineStyle: {
+                    type: 'solid',
+                    color: '#cd12f8', // 这儿设置安全基线颜色
+                  }
+                }
               ]
             },
 
@@ -191,18 +214,22 @@ export default {
             data: this.seriesDataTwo,
             markLine: {
               symbol: ['none', 'none'], //去掉箭头
-              lineStyle: {
-                type: 'solid',
-                color: '#f50534', // 这儿设置安全基线颜色
-              },
               data: [
                 {
                   name: "目标期望达成度线",
                   yAxis: this.yAxis,
+                  lineStyle: {
+                    type: "dashed",
+                    color: '#f50534', // 这儿设置安全基线颜色
+                  }
                 },
                 {
                   name: "达成度平均值",
-                  type: "average"
+                  type: "average",
+                  lineStyle: {
+                    type: 'solid',
+                    color: '#cd12f8', // 这儿设置安全基线颜色
+                  }
                 }
               ]
             },
@@ -251,15 +278,23 @@ export default {
             data: this.seriesDataThree,
             markLine: {
               symbol: ['none', 'none'], //去掉箭头
-              lineStyle: {
-                type: 'solid',
-                color: '#f50534', // 这儿设置安全基线颜色
-              },
               data: [
                 {
                   name: "目标期望达成度线",
                   yAxis: this.yAxis,
+                  lineStyle: {
+                    type: "dashed",
+                    color: '#f50534',
+                  }
                 },
+                {
+                  name: "达成度平均值",
+                  type: "average",
+                  lineStyle: {
+                    type: 'solid',
+                    color: '#cd12f8', // 这儿设置安全基线颜色
+                  }
+                }
               ]
             },
           }
@@ -374,6 +409,18 @@ export default {
         this.yAxis = 0.6
         this.DrawBar()
       })
+
+
+
+
+    },
+    getReport(){
+
+      this.getObjective()
+      this.$axios.post('/studentCourse/getCourseReport',this.searchForm).then( res =>{
+        this.report = res.data.data
+      })
+
     },
     getCourseSelect() {
 
@@ -394,7 +441,8 @@ export default {
         this.classOptions = res.data.data
 
       })
-    }
+    },
+
   },
 
   created() {

@@ -46,13 +46,13 @@
         <Upload></Upload>
 <!--        <el-button type="primary" @click="addCourse()">新增课程</el-button>-->
       </el-form-item>
-      <el-form-item>
+<!--      <el-form-item>
         <el-popconfirm
             title="确定批量删除吗？"
             @confirm="deleteHandle(null)">
           <el-button slot="reference" type="danger" :disabled="delBatchStatus">批量删除</el-button>
         </el-popconfirm>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
     <template>
 
