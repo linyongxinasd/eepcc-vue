@@ -85,7 +85,7 @@
         <el-form-item label="授课教师" prop="teacherId">
           <el-select v-model="courseForm.teacherId" placeholder="请选择授课教师">
             <template v-for="item in teachers">
-              <el-option :label="item.username" :value="item.id"></el-option>
+              <el-option :label="item.name" :value="item.id"></el-option>
             </template>
           </el-select>
 <!--          <el-input v-model="courseForm.teacher"></el-input>-->
@@ -93,7 +93,7 @@
         <el-form-item label="评价教师" prop="evaluatorId">
           <el-select v-model="courseForm.evaluatorId" placeholder="请选择评价教师">
             <template v-for="item in evaluators">
-              <el-option :label="item.username" :value="item.id"></el-option>
+              <el-option :label="item.name" :value="item.id"></el-option>
             </template>
           </el-select>
 <!--          <el-input v-model="courseForm.evaluator"></el-input>-->
@@ -101,7 +101,7 @@
         <el-form-item label="课程负责人" prop="directorId">
           <el-select v-model="courseForm.directorId" placeholder="请选择课程负责人">
             <template v-for="item in directors">
-              <el-option :label="item.username" :value="item.id"></el-option>
+              <el-option :label="item.name" :value="item.id"></el-option>
             </template>
           </el-select>
 <!--          <el-input v-model="courseForm.director"></el-input>-->
@@ -201,7 +201,7 @@
             <el-divider direction="vertical"></el-divider>
             <template>
               <el-popconfirm
-                  title="这是一段内容确定删除吗？"
+                  title="确定删除吗？"
                   @confirm="deleteHandle(scope.row.id)">
                 <el-button type="text" slot="reference">删除</el-button>
               </el-popconfirm>

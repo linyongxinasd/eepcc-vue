@@ -13,7 +13,7 @@
           </div>
           <el-dropdown>
             <span class="el-dropdown-link">
-              {{UserInfo.username}}<i class="el-icon-arrow-down el-icon--right"></i>
+              {{UserInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
@@ -52,7 +52,7 @@ export default {
     return{
       UserInfo: {
         id: "",
-        username: "",
+        name: "",
         avatar: ""
       }
     }
